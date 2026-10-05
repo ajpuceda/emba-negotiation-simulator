@@ -1,0 +1,51 @@
+------------------------------------------------------------
+SECTION 1 — EXECUTIVE BRIEFING (STORY MODE)
+------------------------------------------------------------
+Grand Horizon Resort had weathered the storm of the pandemic better than many competitors, but corporate retreats had become increasingly vital to their business model. As a premium destination property known for its exceptional corporate event capabilities, the resort had invested heavily in upgrading its conference facilities and team-building offerings. Michael Rodriguez, Director of Corporate Events, had been tasked with securing Tech Innovate Inc.'s business for their upcoming team-building retreat—a significant opportunity given the company's recent rapid growth. Michael understood that winning this contract would not only provide immediate revenue but also establish a relationship with a high-potential client that could lead to repeat business and referrals. The resort's occupancy had been inconsistent since the pandemic, with corporate bookings accounting for 40% of their revenue, making this negotiation particularly important for meeting quarterly targets.
+
+Michael had presented Tech Innovate with an impressive array of options, highlighting the resort's state-of-the-art facilities, luxurious accommodations, and comprehensive team-building programs. However, as discussions progressed, it became clear that the client's priorities didn't perfectly align with the resort's premium positioning. Michael needed to balance maximizing revenue with demonstrating value to the client, while also considering the operational implications of different group sizes, durations, and activity levels. The resort's profitability depended on optimizing facility utilization and maintaining appropriate staff-to-guest ratios, which created natural tensions with some of the client's preferences. Michael also recognized that this negotiation presented an opportunity to showcase the resort's flexibility and customization capabilities, potentially opening doors to more lucrative contracts in the future.
+
+As the negotiation date approached, Michael analyzed the five key variables that would determine the success of this deal: base price, duration, number of participants, activity package level, and meal/experiential package tier. Each variable carried different implications for the resort's profitability and operational efficiency. Michael had calculated the expected impact on the resort's EBITDA for each possible combination, factoring in not just direct revenue but also operational costs, staffing requirements, and facility utilization rates. He had also identified potential risks, including the possibility of last-minute cancellations, unexpected service demands, and the challenge of maintaining quality standards with larger groups. Michael knew that finding the right balance across all dimensions would be essential to creating a successful partnership that delivered value to Tech Innovate while maintaining profitability for the resort.
+
+The resort's executive team had made it clear that this negotiation was a priority, with specific targets for revenue growth and facility utilization. Michael had been given considerable flexibility in structuring the deal, but with clear boundaries on minimum acceptable margins. He had prepared detailed scenarios showing how different combinations of variables would impact the resort's EBITDA, both directly through revenue and indirectly through operational efficiency. These projections formed the foundation of his negotiation strategy, allowing him to make data-driven decisions about where to be flexible and where to hold firm on pricing and terms. Michael also understood that the relationship with Tech Innovate could extend beyond this single event, potentially establishing a long-term partnership that would provide consistent business throughout the year.
+
+As Michael prepared to meet with Sarah Chen and her team, he reviewed his position and strategy. The resort's financial success depended on securing a contract that maximized revenue while maintaining appropriate service levels and operational efficiency. Michael had identified their best alternative to a negotiated agreement (BATNA) in case talks with Tech Innovate failed, which would involve booking smaller groups at standard rates but leaving significant capacity unused. This established their reservation point and provided a benchmark against which to evaluate potential deals. Michael emphasized the importance of maintaining flexibility during the negotiation while staying focused on the resort's core objectives: maximizing revenue, optimizing facility utilization, and demonstrating the value of premium offerings. The team prepared to enter what promised to be a complex but ultimately rewarding negotiation process that would shape the resort's corporate business strategy for years to come.
+------------------------------------------------------------
+SECTION 2 — EXECUTIVE SUMMARY (CONFIDENTIAL INTEL STORY)
+------------------------------------------------
+As Michael Rodriguez, Director of Corporate Events at Grand Horizon Resort, your mission is to negotiate a lucrative team-building retreat contract with Tech Innovate Inc. that maximizes revenue and optimizes facility utilization while maintaining premium service standards. Your public position emphasizes the resort's exceptional capabilities and transformative experiences, but your private financial targets are more precise: you must secure a minimum contract value of $475,000, target a net transaction gain of +$95,000 dEBITDA, and aim for an ideal max package value of +$145,000 dEBITDA. Your BATNA is booking smaller groups at standard rates but leaving significant capacity unused, which would result in a $120,000 dEBITDA hit compared to your ideal outcome, establishing your reservation point at +$25,000 net dEBITDA. Your hidden financial landmine is the risk of 10% probability of a $80,000 operational failure penalty if service quality cannot be maintained with the requested group size, while your blind leverage is Tech Innovate's urgent need to address team cohesion issues within a specific timeframe. Your private deep core cash synergy bonus condition is +$85,000 dEBITDA windfall for securing [Base Price at $650/person/day] AND [Number of Participants at 125], which creates optimal revenue per guest while maintaining service quality. Rank your priorities: 1) Base Price, 2) Number of Participants, 3) Duration, 4) Activity Package Level, 5) Meal/Experiential Package Tier.
+------------------------------------------------------------
+SECTION 3 — NEGOTIATION MATRIX
+------------------------------------------------
+| Variable | Option | dEBITDA Impact | Business Mechanism |
+|----------|--------|----------------|-------------------|
+| Base Price | $350/person/day | -$65,000 | Below-market rate that sacrifices margin despite volume potential |
+| | $450/person/day | -$35,000 | Below optimal pricing but maintains acceptable margins with high occupancy |
+| | $550/person/day | +$15,000 | Standard corporate rate that balances revenue with competitive positioning |
+| | $650/person/day | +$45,000 | Premium pricing that maximizes revenue per guest |
+| | $750/person/day | +$75,000 | Luxury pricing that maximizes revenue but risks losing price-sensitive clients |
+| Duration | 2 days | -$45,000 | Short stay limits revenue from food, beverage, and ancillary services |
+| | 3 days | -$15,000 | Suboptimal length for maximizing facility utilization and ancillary revenue |
+| | 4 days | +$15,000 | Optimal length for facility utilization and service staff deployment |
+| | 5 days | +$35,000 | Extended stay increases F&B revenue and spa utilization |
+| | 7 days | +$65,000 | Maximum revenue from all facilities and services with minimal setup/teardown costs |
+| Number of Participants | 50 participants | -$30,000 | Low occupancy underutilizes premium facilities |
+| | 75 participants | -$15,000 | Suboptimal group size for facility optimization |
+| | 100 participants | +$5,000 | Ideal group size for facility utilization and service efficiency |
+| | 125 participants | +$20,000 | High occupancy maximizes room revenue and F&B volume |
+| | 150 participants | +$40,000 | Maximum revenue potential with slight service quality trade-offs |
+| Activity Package Level | Basic Package | -$25,000 | Low-margin offering that utilizes standard facilities with minimal staff |
+| | Standard Package | -$5,000 | Moderate margin with standard facilitation and equipment |
+| | Premium Package | +$10,000 | Higher margin activities with specialized equipment and facilitators |
+| | Executive Package | +$30,000 | Premium pricing for customized programs with expert facilitation |
+| | Elite Package | +$50,000 | Maximum revenue from exclusive experiences with specialized staff |
+| Meal/Experiential Package Tier | Standard Catering | -$10,000 | Low-margin basic service with minimal staff requirements |
+| | Enhanced Catering | -$2,000 | Moderate margin with slightly elevated service levels |
+| | Premium Dining | +$5,000 | Higher margin with plated service and premium ingredients |
+| | Culinary Experience | +$15,000 | Significant margin from interactive experiences and premium ingredients |
+| | Gourmet Journey | +$25,000 | Maximum revenue from exclusive dining experiences with specialized staff |
+------------------------------------------------------------
+COMBINATION SYNERGY SUMMARY (AI)
+------------------------------------------------
+★ CRITICAL SYNERGY BONUS ★
+• INTEGRATIVE COMBINATION BONUS: Securing strictly [Base Price at $650/person/day] AND [Number of Participants at 125] injects an additional +$85,000 normalized cash windfall to your firm's bottom-line EBITDA.

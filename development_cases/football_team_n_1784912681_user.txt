@@ -1,0 +1,60 @@
+------------------------------------------------------------
+SECTION 1 — EXECUTIVE BRIEFING (STORY MODE)
+------------------------------------------------------------
+The Metropolitan Lions, a storied but financially struggling football franchise, stood at a crossroads. Founded in 1923, the team had a passionate fan base but had not won a championship in over two decades. Their current stadium, though historic, was outdated and lacked the modern amenities that top-tier sponsors demanded. Team owner Eleanor Vance had inherited the team from her father and was determined to restore its glory without sacrificing its identity.
+
+The Lions' financial situation had deteriorated over the past five years. Rising player salaries, coupled with declining merchandise sales and stadium revenue, had eroded their profit margins. Their existing sponsorship deal with MetroBank was set to expire, and the bank had indicated they would not renew at current rates. Vance knew she needed to secure a substantial new sponsorship to keep the team competitive and fund much-needed stadium renovations.
+
+Across town, GlobalTech Industries, a rapidly growing technology conglomerate, was looking to expand its brand presence in the sports market. CEO Marcus Chen had identified the Lions as an ideal partner due to their loyal fan base and prime television exposure. Chen believed that associating GlobalTech with the Lions would enhance the company's image as innovative and community-focused. However, he was concerned about the team's on-field performance and the potential for negative press if the Lions continued to struggle.
+
+The negotiations between Vance and Chen had begun tentatively, with both sides holding firm on their initial positions. Vance emphasized the team's heritage and passionate fan base, arguing that these intangible assets justified a premium sponsorship fee. Chen countered with data showing the team's declining viewership and merchandise sales, suggesting a more moderate approach. The stadium's outdated facilities further complicated matters, as GlobalTech was seeking modern digital integration opportunities that the current venue couldn't support.
+
+As the negotiations progressed, both sides began to explore creative solutions. Vance proposed phased stadium renovations that could be funded partially by the sponsorship deal, while Chen suggested a multi-year contract with performance-based incentives. The discussions touched on sensitive topics like brand visibility, exclusivity clauses, and the potential for player endorsements. Each variable carried different weight for both parties, with Vance prioritizing immediate financial stability and Chen seeking maximum brand exposure and long-term association with a winning team.
+
+The clock was ticking. The Lions' season was approaching, and both Vance and Chen knew that a successful deal would not only secure the team's immediate future but also position it for sustained success. The challenge lay in finding common ground on five critical variables: the base price of the sponsorship, the level of brand visibility, the exclusivity of the deal, the contract duration, and the structure of performance bonuses. Each decision carried financial implications that would impact both organizations' bottom lines for years to come.
+------------------------------------------------------------
+SECTION 2 — EXECUTIVE SUMMARY (CONFIDENTIAL INTEL STORY)
+------------------------------------------------------------
+You are Eleanor Vance, owner of the Metropolitan Lions football team. Your mission is to secure a sponsorship deal that provides immediate financial stability while preserving the team's brand integrity and fan connection. Your public position emphasizes the team's heritage and passionate fan base, but privately you need a minimum of $7.5M annually to fund operations and stadium renovations. Your target net transaction gain is +$10M dEBITDA, with an ideal max package value of +$15M dEBITDA. Your BATNA is a $3M deal with a regional bank, resulting in +$3M dEBITDA. Your total package financial walk-away threshold is +$6M dEBITDA.
+
+Your hidden financial landmine is the "Elite" brand visibility option, which carries a 30% risk of $1M brand damage cost if the team performs poorly. Your blind leverage is the option to sell digital naming rights separately, worth $1M if not included in this deal. Your private deep core cash synergy bonus is an additional +$75,000 dEBITDA if you secure "Premium" brand visibility AND a "3 years" contract duration, due to increased merchandise sales.
+
+Your ranked priorities from highest to lowest are: 1) Base Price, 2) Brand Visibility, 3) Exclusivity, 4) Contract Duration, 5) Performance Bonuses.
+------------------------------------------------------------
+SECTION 3 — NEGOTIATION MATRIX
+------------------------------------------------------------
+- Variable 1: Base Price
+  * $5M: dEBITDA Impact: +$5M | Business Mechanism: Direct revenue with no offsetting costs or risks
+  * $7.5M: dEBITDA Impact: +$7.5M | Business Mechanism: Direct revenue meeting minimum operational requirements
+  * $10M: dEBITDA Impact: +$10M | Business Mechanism: Direct revenue enabling partial stadium renovations
+  * $12.5M: dEBITDA Impact: +$12.5M | Business Mechanism: Direct revenue funding comprehensive stadium upgrades
+  * $15M: dEBITDA Impact: +$15M | Business Mechanism: Direct revenue exceeding operational needs, creating surplus for player investments
+
+- Variable 2: Brand Visibility
+  * Limited: dEBITDA Impact: +$0 | Business Mechanism: Basic jersey sponsorship without additional revenue streams
+  * Standard: dEBITDA Impact: +$100,000 | Business Mechanism: Minor increase in fan engagement and ancillary revenue
+  * Premium: dEBITDA Impact: +$300,000 | Business Mechanism: Strong social media presence driving merchandise and ticket sales
+  * Maximum: dEBITDA Impact: +$300,000 | Business Mechanism: High visibility balanced against brand dilution risk
+  * Elite: dEBITDA Impact: +$200,000 | Business Mechanism: Maximum exposure with significant brand dilution risk
+
+- Variable 3: Exclusivity
+  * Non-exclusive: dEBITDA Impact: +$0 | Business Mechanism: Ability to pursue other category sponsors without premium
+  * Semi-exclusive: dEBITDA Impact: +$500,000 | Business Mechanism: Limited competition commanding higher price
+  * Fully exclusive: dEBITDA Impact: +$700,000 | Business Mechanism: Premium pricing offset by lost other sponsorship opportunities
+
+- Variable 4: Contract Duration
+  * 1 year: dEBITDA Impact: +$0 | Business Mechanism: Flexibility without stability premium
+  * 2 years: dEBITDA Impact: +$200,000 | Business Mechanism: Moderate stability with operational predictability
+  * 3 years: dEBITDA Impact: +$400,000 | Business Mechanism: Strong stability enabling long-term planning
+  * 5 years: dEBITDA Impact: +$700,000 | Business Mechanism: High stability with significant planning benefits
+  * 10 years: dEBITDA Impact: +$700,000 | Business Mechanism: Maximum stability with opportunity cost of market flexibility
+
+- Variable 5: Performance Bonuses
+  * No bonuses: dEBITDA Impact: +$0 | Business Mechanism: Certain revenue without performance upside
+  * League position: dEBITDA Impact: +$150,000 | Business Mechanism: 30% probability of $500,000 bonus based on standings
+  * Championship: dEBITDA Impact: +$100,000 | Business Mechanism: 10% probability of $1M bonus for championship win
+  * Attendance: dEBITDA Impact: +$150,000 | Business Mechanism: 50% probability of $300,000 bonus based on ticket sales
+  * Combined: dEBITDA Impact: +$225,000 | Business Mechanism: 15% probability of $1.5M bonus across multiple metrics
+
+COMBINATION SYNERGY SUMMARY (USER)
+• INTEGRATIVE COMBINATION BONUS: Securing strictly [Brand Visibility at Premium] AND [Contract Duration at 3 years] injects an additional +$75,000 normalized cash windfall to your firm's bottom-line EBITDA.

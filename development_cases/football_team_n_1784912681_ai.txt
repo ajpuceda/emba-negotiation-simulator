@@ -1,0 +1,58 @@
+------------------------------------------------------------
+SECTION 1 — EXECUTIVE BRIEFING (STORY MODE)
+------------------------------------------------------------
+GlobalTech Industries had been methodically expanding its brand presence in the sports market over the past three years. Under the leadership of CEO Marcus Chen, the technology conglomerate had successfully sponsored several high-profile events and athletes, but lacked a deep association with a major sports franchise. Chen believed that partnering with a football team would provide the sustained brand exposure his company needed to compete with established tech giants in the consumer market.
+
+The Metropolitan Lions, despite their storied history, had been struggling financially and on the field. Chen saw this as an opportunity—GlobalTech could provide the financial lifeline the team needed while positioning itself as a savior of the franchise. The company's marketing team had identified the Lions' passionate fan base as a valuable demographic for GlobalTech's expanding consumer products division. However, they were concerned about the team's recent performance and the potential for negative brand association if the Lions continued to lose.
+
+Chen had authorized his negotiation team, led by CFO Sarah Jenkins, to pursue a comprehensive sponsorship deal that would maximize GlobalTech's brand visibility and control. The team had been monitoring the Lions' situation for months and knew that the team's current stadium lacked modern digital capabilities that GlobalTech was eager to leverage. This presented both an opportunity and a challenge—GlobalTech could fund renovations but would need significant concessions to justify the investment.
+
+As negotiations began, Jenkins emphasized GlobalTech's desire for maximum brand exposure and a long-term partnership. She presented data showing that the Lions' television ratings, while down from previous years, still reached millions of viewers weekly. She also highlighted the team's social media presence as an untapped resource for digital marketing. The Lions' counteroffers focused on financial terms and brand protection, creating an immediate tension between GlobalTech's desire for visibility and the team's need to preserve its identity.
+
+The negotiations had reached a critical juncture. Jenkins knew that GlobalTech's board was expecting a substantial return on investment, and she needed to secure terms that would justify the sponsorship expense. The five key variables—base price, brand visibility, exclusivity, contract duration, and performance bonuses—each carried different weight for GlobalTech. Jenkins prioritized brand exposure above all else, as it directly aligned with the company's marketing objectives. However, she also needed to ensure the deal was financially viable and protected GlobalTech from potential risks associated with the team's uncertain performance.
+------------------------------------------------------------
+SECTION 2 — EXECUTIVE SUMMARY (CONFIDENTIAL INTEL STORY)
+------------------------------------------------------------
+You are Sarah Jenkins, CFO of GlobalTech Industries. Your mission is to secure a sponsorship deal that maximizes brand exposure and control while maintaining financial prudence. Your public position emphasizes GlobalTech's commitment to community and innovation, but privately you need to justify at least $5M in annual sponsorship expenditure to your board. Your target net transaction gain is +$4M dEBITDA, with an ideal max package value of +$6M dEBITDA. Your BATNA is a $4M sponsorship deal with a different sports franchise, resulting in +$4M dEBITDA. Your total package financial walk-away threshold is +$2M dEBITDA.
+
+Your hidden financial landmine is any contract duration under "5 years," which carries a 40% risk of $1.5M rebranding cost if the partnership terminates early. Your blind leverage is the option to sponsor the team's training facility, worth $1.5M if not included in this deal. Your private deep core cash synergy bonus is an additional +$100,000 dEBITDA if you secure "Fully exclusive" AND "10 years" contract, due to cross-promotional opportunities.
+
+Your ranked priorities from highest to lowest are: 1) Brand Visibility, 2) Base Price, 3) Exclusivity, 4) Contract Duration, 5) Performance Bonuses.
+------------------------------------------------------------
+SECTION 3 — NEGOTIATION MATRIX
+------------------------------------------------------------
+- Variable 1: Base Price
+  * $5M: dEBITDA Impact: -$5M | Business Mechanism: Direct cost offset by basic brand exposure
+  * $7.5M: dEBITDA Impact: -$7.5M | Business Mechanism: Increased cost for moderate brand benefits
+  * $10M: dEBITDA Impact: -$10M | Business Mechanism: Significant cost for substantial brand association
+  * $12.5M: dEBITDA Impact: -$12.5M | Business Mechanism: High cost for premium brand positioning
+  * $15M: dEBITDA Impact: -$15M | Business Mechanism: Maximum cost for premier brand status
+
+- Variable 2: Brand Visibility
+  * Limited: dEBITDA Impact: +$0 | Business Mechanism: Basic exposure without additional value
+  * Standard: dEBITDA Impact: +$1M | Business Mechanism: Good visibility across multiple platforms
+  * Premium: dEBITDA Impact: +$2.5M | Business Mechanism: Strong digital and social media presence
+  * Maximum: dEBITDA Impact: +$4M | Business Mechanism: Very high visibility across all channels
+  * Elite: dEBITDA Impact: +$6M | Business Mechanism: Maximum brand penetration with player endorsements
+
+- Variable 3: Exclusivity
+  * Non-exclusive: dEBITDA Impact: +$0 | Business Mechanism: Basic association without competitive advantage
+  * Semi-exclusive: dEBITDA Impact: +$1M | Business Mechanism: Limited competition enhancing brand value
+  * Fully exclusive: dEBITDA Impact: +$2M | Business Mechanism: No competition maximizing brand impact
+
+- Variable 4: Contract Duration
+  * 1 year: dEBITDA Impact: +$0 | Business Mechanism: Short-term commitment without stability benefits
+  * 2 years: dEBITDA Impact: +$500,000 | Business Mechanism: Moderate commitment with planning benefits
+  * 3 years: dEBITDA Impact: +$1M | Business Mechanism: Good commitment enabling brand building
+  * 5 years: dEBITDA Impact: +$1.5M | Business Mechanism: Strong commitment with long-term positioning
+  * 10 years: dEBITDA Impact: +$1.5M | Business Mechanism: Maximum commitment with discount applied
+
+- Variable 5: Performance Bonuses
+  * No bonuses: dEBITDA Impact: +$0 | Business Mechanism: Certain cost without performance upside
+  * League position: dEBITDA Impact: -$150,000 | Business Mechanism: 30% probability of $500,000 bonus expense
+  * Championship: dEBITDA Impact: -$100,000 | Business Mechanism: 10% probability of $1M bonus expense
+  * Attendance: dEBITDA Impact: -$150,000 | Business Mechanism: 50% probability of $300,000 bonus expense
+  * Combined: dEBITDA Impact: -$225,000 | Business Mechanism: 15% probability of $1.5M bonus expense across metrics
+
+COMBINATION SYNERGY SUMMARY (AI)
+• INTEGRATIVE COMBINATION BONUS: Securing strictly [Exclusivity at Fully exclusive] AND [Contract Duration at 10 years] injects an additional +$100,000 normalized cash windfall to your firm's bottom-line EBITDA.
