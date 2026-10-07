@@ -124,16 +124,19 @@ def render_justified_report(report_text):
             clean_section_title = clean_section_title.replace("—", "").replace("-", "").strip()
             compiled_html += f'<h4 style="color: #1D3557; font-size: 17px; font-weight: bold; margin-top: 26px; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.5px; border-left: 4px solid #1D3557; padding-left: 8px;">{clean_section_title}</h4>'
 
+        # 3. OPCIONES DE LAS VARIABLES (Corregido: ya no elimina los números como '1 year')
         elif cleaned_line.startswith("*") or cleaned_line.startswith("•"):
             compiled_html += flush_paragraph()
             current_paragraph_lines = []
-            list_item_text = re.sub(r"^[\s\-_*•▪▫◦¶.·\d]+", "", cleaned_line).strip()
+            # SE QUITÓ '\d' de la expresión regular para preservar los números
+            list_item_text = re.sub(r"^[\s\-_*•▪▫◦¶.·]+", "", cleaned_line).strip()
             compiled_html += f'<div style="text-align: justify; text-justify: inter-word; font-size: 14px; color: #495057; line-height: 1.5; margin-left: 40px; margin-bottom: 8px; display: list-item; list-style-type: circle;">{list_item_text}</div>'
             
+        # 4. VARIABLES PRINCIPALES (Corregido para no mutilar números si se indexan con guiones)
         elif cleaned_line.startswith("-") or re.match(r"^\d+\.", cleaned_line):
             compiled_html += flush_paragraph()
             current_paragraph_lines = []
-            list_item_text = re.sub(r"^[\s\-_*•▪▫◦¶.·\d]+", "", cleaned_line).strip()
+            list_item_text = re.sub(r"^[\s\-_*•▪▫◦¶.·]+|^\d+\.\s*", "", cleaned_line).strip()
             compiled_html += f'<div style="text-align: justify; text-justify: inter-word; font-size: 15px; color: #212529; line-height: 1.5; margin-left: 20px; margin-bottom: 12px; display: list-item; list-style-type: square; font-weight: bold;">{list_item_text}</div>'
             
         else:
