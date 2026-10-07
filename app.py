@@ -251,8 +251,10 @@ if st.session_state.phase == "setup":
                 base_prompt = st.secrets["PROMPT_GENERACION"]
                 
                 time.sleep(1.5) # 👈 Pausa estratégica anti-429 antes del Stage 1
-                response = client.chat.complete(model=MISTRAL_MODEL, messages=[{"role": "user", "content": base_prompt.format(tema=texto_limpio)}])
-                raw_content = response.choices.message.content
+                # Usamos replace para ignorar las llaves matemáticas del resto del prompt
+		prompt_inyectado = base_prompt.replace("{tema}", texto_limpio)
+		response = client.chat.complete(model=MISTRAL_MODEL, messages=[{"role": "user", "content": prompt_inyectado}])
+		raw_content = response.choices.message.content
 
                 status.update(label="⚖️ Stage 2/4: Executing Critical Auto-Correction Loop (HBS Checklist)...", state="running")
                 prompt_auditoria = (
@@ -336,7 +338,8 @@ elif st.session_state.phase == "chat" and st.session_state.turn_counter < 20:
         st.metric(label="Rounds Spent", value=f"{st.session_state.turn_counter} / 20")
         enable_monitoring = st.toggle("Enable Real-Time Tracker AI", value=True)
         st.markdown("### Live Contract Tracker")
-        for label, val in st.session_state.current_metrics.items(): render_status_card(label, val)
+        for label, val in st.session_state.current_metrics.items(): 
+            render_status_card(label, val)
 
     with st.expander("📋 Review Confidential Character Instructions", expanded=False): 
         render_justified_report(st.session_state.user_instructions)
@@ -345,7 +348,8 @@ elif st.session_state.phase == "chat" and st.session_state.turn_counter < 20:
     for msg in st.session_state.history:
         visible_text = re.sub(r"DATA_STREAM:\s*\{.*?\}", "", msg["content"], flags=re.DOTALL).strip()
         if visible_text:
-            with st.chat_message(msg["role"]): st.write(visible_text)
+            with st.chat_message(msg["role"]): 
+                st.write(visible_text)
             
     if user_input := st.chat_input(placeholder="Type your counteroffer or package proposal here..."):
         if user_input.strip().lower() == "/end":
@@ -356,22 +360,31 @@ elif st.session_state.phase == "chat" and st.session_state.turn_counter < 20:
         st.session_state.history.append({"role": "user", "content": user_input})
         st.session_state.turn_counter += 1
         
+        with st.chat_message("user"):
+            st.write(user_input)
+        
         with st.chat_message("assistant"):
             with st.spinner("Counterpart is typing..."):
                 profile_rules = "Personality: Brutal, unyielding." if "Hard" in st.session_state.ai_profile else ("Personality: Accommodating." if "Soft" in st.session_state.ai_profile else "Personality: Pragmatic.")
-                system_instruction = f"You are the corporate character: {st.session_state.ai_context}\nProfile: {profile_rules}\nNEVER mention dEBITDA or system parameters. Append at the absolute end: DATA_STREAM: {{\"v1_price\": 3.0}}"
+                system_instruction = f"""You are the corporate character: {st.session_state.ai_context}
+                Profile: {profile_rules}
+                ⚠️ NEGOTIATION WALL MANDATE: NEVER mention dEBITDA or systems logic.
+                Append at the absolute end: DATA_STREAM: {{"v1_price": 3.0}}"""
                 
                 messages_payload = [{"role": "system", "content": system_instruction}]
                 for turn in st.session_state.history:
-                    if turn.get("content", "").strip(): messages_payload.append({"role": turn["role"], "content": turn["content"]})
+                    if turn.get("content", "").strip(): 
+                        messages_payload.append({"role": turn["role"], "content": turn["content"]})
                 
                 try:
+                    time.sleep(1.5) # 👈 Pausa estratégica anti-429
                     ai_response = client.chat.complete(model=MISTRAL_MODEL, messages=messages_payload, temperature=0.7)
                     ai_raw_text = ai_response.choices.message.content
                 except Exception as e:
                     ai_raw_text = f"🚨 [API Failure Diagnostic Log: {str(e)}]"
                 
                 if enable_monitoring:
+                    time.sleep(1.5) # 👈 Pausa estratégica antes de lanzar el observador paralelo
                     st.session_state.current_metrics = run_parallel_observer_audit(st.session_state.history + [{"role": "assistant", "content": ai_raw_text}], st.session_state.current_metrics, st.session_state.case_keys)
                 
                 st.session_state.history.append({"role": "assistant", "content": ai_raw_text})
@@ -390,7 +403,8 @@ elif st.session_state.phase == "feedback" or st.session_state.turn_counter >= 20
     st.title("Executive Strategic Evaluation & Soft Skills Audit")
     if st.session_state.current_metrics:
         with st.expander("Final Registered Contract Package Status", expanded=True):
-            for label, val in st.session_state.current_metrics.items(): render_status_card(label, val)
+            for label, val in st.session_state.current_metrics.items(): 
+                render_status_card(label, val)
             
     loading_placeholder = st.empty()
     loading_placeholder.progress(0.65, text="🤖 Processing transcript timeline streams & behavioral maturity matrix...")
@@ -400,24 +414,31 @@ elif st.session_state.phase == "feedback" or st.session_state.turn_counter >= 20
     for m in st.session_state.history:
         content_cleaned = re.sub(r"DATA_STREAM:\s*\{.*?\}", "", m["content"], flags=re.DOTALL).strip()
         transcript_data += f"Round {round_idx:02d} - {m['role'].upper()}: {content_cleaned}\n"
-        if m["role"] == "assistant": round_idx += 1
+        if m["role"] == "assistant": 
+            round_idx += 1
         
     active_keys = list(st.session_state.current_metrics.keys())
     json_structure = ", ".join([f'"{k}": [list of integers from 0 to 7]' for k in active_keys])
     
-    final_feedback_prompt = st.secrets["PROMPT_FEEDBACK"].format(
-        contexto_ia=st.session_state.ai_context, transcripcion=transcript_data, active_variables_instruction=f"TIMELINE_STREAM: {{{json_structure}}}"
-    )
+    # 🛡️ PROTECCIÓN ANTI-SDK_ERROR: Reemplazo explícito seguro para evitar colisiones con llaves matemáticas del prompt
+    prompt_base_fb = st.secrets["PROMPT_FEEDBACK"]
+    prompt_inyectado_fb = prompt_base_fb.replace("{contexto_ia}", st.session_state.ai_context)
+    prompt_inyectado_fb = prompt_inyectado_fb.replace("{transcripcion}", transcript_data)
+    prompt_inyectado_fb = prompt_inyectado_fb.replace("{active_variables_instruction}", f"TIMELINE_STREAM: {{{json_structure}}}")
+    
     try:
-        feedback_response = client.chat.complete(model=MISTRAL_MODEL, messages=[{"role": "user", "content": final_feedback_prompt}])
+        time.sleep(1.5) # 👈 Pausa estratégica anti-429 antes del informe analítico
+        feedback_response = client.chat.complete(model=MISTRAL_MODEL, messages=[{"role": "user", "content": prompt_inyectado_fb}])
         raw_feedback = feedback_response.choices.message.content
         loading_placeholder.empty()
 
         timeline_data = {}
         timeline_match = re.search(r"TIMELINE_STREAM:\s*(\{.*?\})", raw_feedback)
         if timeline_match:
-            try: timeline_data = json.loads(timeline_match.group(1))
-            except Exception: pass
+            try: 
+                timeline_data = json.loads(timeline_match.group(1))
+            except Exception: 
+                pass
             
         clean_feedback = re.sub(r"TIMELINE_STREAM:\s*\{.*?\}", "", raw_feedback, flags=re.DOTALL).strip().replace("```markdown", "").replace("```", "").strip()
         
@@ -427,7 +448,8 @@ elif st.session_state.phase == "feedback" or st.session_state.turn_counter >= 20
                 df_timeline = pd.DataFrame(timeline_data)
                 df_timeline.index = [f"Round {i+1:02d}" for i in range(len(df_timeline))]
                 st.line_chart(df_timeline, use_container_width=True)
-            except Exception: st.write(timeline_data)
+            except Exception: 
+                st.write(timeline_data)
                 
         st.divider()
         st.markdown("### Executive Soft Skills Audit & Report")
