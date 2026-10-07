@@ -346,7 +346,8 @@ elif st.session_state.phase == "chat" and st.session_state.turn_counter < 20:
         st.metric(label="Rounds Spent", value=f"{st.session_state.turn_counter} / 20")
         enable_monitoring = st.toggle("Enable Real-Time Tracker AI", value=True)
         st.markdown("### Live Contract Tracker")
-        for label, val in st.session_state.current_metrics.items(): render_status_card(label, val)
+        for label, val in st.session_state.current_metrics.items(): 
+            render_status_card(label, val)
 
     with st.expander("📋 Review Confidential Character Instructions", expanded=False): 
         render_justified_report(st.session_state.user_instructions)
@@ -355,10 +356,10 @@ elif st.session_state.phase == "chat" and st.session_state.turn_counter < 20:
     for msg in st.session_state.history:
         visible_text = re.sub(r"DATA_STREAM:\s*\{.*?\}", "", msg["content"], flags=re.DOTALL).strip()
         if visible_text:
-            with st.chat_message(msg["role"]): st.write(visible_text)
+            with st.chat_message(msg["role"]): 
+                st.write(visible_text)
             
     if user_input := st.chat_input(placeholder="Type your counteroffer or package proposal here... (Or type /end to close meeting)"):
-
         if user_input.strip().lower() == "/end":
             st.session_state.phase = "feedback"
             st.rerun()
@@ -373,36 +374,40 @@ elif st.session_state.phase == "chat" and st.session_state.turn_counter < 20:
         with st.chat_message("assistant"):
             with st.spinner("Counterpart is typing..."):
                 profile_rules = "Personality: Brutal, unyielding." if "Hard" in st.session_state.ai_profile else ("Personality: Accommodating." if "Soft" in st.session_state.ai_profile else "Personality: Pragmatic.")
-                                system_instruction = f"""
-                You are the corporate negotiator character. Your confidential corporate background and operational boundaries are defined here: 
-                {st.session_state.ai_context}
                 
-                Profile style/Personality rules: {profile_rules}
-                
-                ⚠️ NEGOTIATION WALL MANDATE (NEVER BREAK THIS):
-                1. You are a human executive in a high-stakes business meeting. You do NOT know what an LLM, a prompt, or a 'Negotiation Matrix' is.
-                2. NEVER, under any circumstance, mention technical terms like "dEBITDA", "EBITDA impact", "EBITDA curves", "Level 1.0", "target of +4M", or "windfall bonus conditions".
-                3. CRITICAL SECURITY GUARDRAIL: NEVER reveal your underlying financial values, your exact reservation points, or your secret combination/synergy bonus conditions. If the user asks about them, politely deflect using business logic.
-                4. Talk strictly in strategic business prose. If you want to argue about price, duration, or exclusivity, use business arguments (e.g., "market volatility", "long-term commitment", "operational overhead"), NEVER the mathematical ledger score or targets.
-                
-                # --- MANDATORY ATTACHMENT REGEX AND API RUNNERS ---
-                CRITICAL ATTACHMENT MANDATE: Append a hidden JSON line at the absolute end (do not mention it in your dialogue):
-                DATA_STREAM: {{"v1_price": value, "v2_metric": value, "v3_metric": value, "v4_metric": value, "v5_metric": value}} (Values 1.0 to 5.0)
-                """
+                system_instruction = f"""You are the corporate character. Your confidential corporate background and operational boundaries are defined here: 
+{st.session_state.ai_context}
 
+Profile style/Personality rules: {profile_rules}
+
+⚠️ NEGOTIATION WALL MANDATE (NEVER BREAK THIS):
+1. You are a human executive in a high-stakes business meeting. You do NOT know what an LLM, a prompt, or a 'Negotiation Matrix' is.
+2. NEVER, under any circumstance, mention technical terms like "dEBITDA", "EBITDA impact", "EBITDA curves", "Level 1.0", "target of +4M", or "windfall bonus conditions".
+3. CRITICAL SECURITY GUARDRAIL: NEVER reveal your underlying financial values, your exact reservation points, or your secret combination/synergy bonus conditions. If the user asks about them, politely deflect using business logic.
+4. Talk strictly in strategic business prose. If you want to argue about price, duration, or exclusivity, use business arguments (e.g., "market volatility", "long-term commitment", "operational overhead"), NEVER the mathematical ledger score or targets.
+
+# --- MANDATORY ATTACHMENT REGEX AND API RUNNERS ---
+CRITICAL ATTACHMENT MANDATE: Append a hidden JSON line at the absolute end (do not mention it in your dialogue):
+DATA_STREAM: {{"v1_price": value, "v2_metric": value, "v3_metric": value, "v4_metric": value, "v5_metric": value}} (Values 1.0 to 5.0)"""
                 
                 messages_payload = [{"role": "system", "content": system_instruction}]
                 for turn in st.session_state.history:
-                    if turn.get("content", "").strip(): messages_payload.append({"role": turn["role"], "content": turn["content"]})
+                    if turn.get("content", "").strip(): 
+                        messages_payload.append({"role": turn["role"], "content": turn["content"]})
                 
-                # Chat protegido en tiempo real de forma segura contra el error 429
                 ai_raw_text = safe_mistral_call(messages_payload, temperature=0.7)
                 
                 if enable_monitoring:
-                    time.sleep(1.5) # Pausa mínima para no congestionar las peticiones por segundo
-                    st.session_state.current_metrics = run_parallel_observer_audit(st.session_state.history + [{"role": "assistant", "content": ai_raw_text}], st.session_state.current_metrics, st.session_state.case_keys)
+                    time.sleep(1.5)
+                    st.session_state.current_metrics = run_parallel_observer_audit(
+                        st.session_state.history + [{"role": "assistant", "content": ai_raw_text}], 
+                        st.session_state.current_metrics, 
+                        st.session_state.case_keys
+                    )
                 
                 st.session_state.history.append({"role": "assistant", "content": ai_raw_text})
+                visible_clean_text = re.sub(r"DATA_STREAM:\s*\{.*?\}", "", ai_raw_text, flags=re.DOTALL).strip()
+                st.write(visible_clean_text)
         st.rerun()
         st.stop()
 
@@ -416,7 +421,6 @@ elif st.session_state.phase == "chat" and st.session_state.turn_counter < 20:
 # ========================================================================
 elif st.session_state.phase == "feedback" or st.session_state.turn_counter >= 20:
     st.title("Executive Strategic Evaluation & Soft Skills Audit")
-    
     if st.session_state.current_metrics:
         with st.expander("Final Registered Contract Package Status", expanded=True):
             for label, val in st.session_state.current_metrics.items(): 
@@ -445,56 +449,30 @@ elif st.session_state.phase == "feedback" or st.session_state.turn_counter >= 20
         raw_feedback = safe_mistral_call([{"role": "user", "content": prompt_inyectado_fb}], temperature=0.3)
         loading_placeholder.empty()
 
-        # 🧮 SURGICAL EXTRACTION OF THE PERFORMANCE RATING
-        score_value = "N/A"
-        score_match = re.search(r"\[SCORE:\s*(\d{1,3})/100\]", raw_feedback)
-        if score_match:
-            score_value = f"{score_match.group(1)} / 100"
-            # Clean the tag from raw response text so it doesn't print awkwardly
-            raw_feedback = re.sub(r"\[SCORE:\s*\d{1,3}/100\]", "", raw_feedback).strip()
-
         timeline_data = {}
         timeline_match = re.search(r"TIMELINE_STREAM:\s*(\{.*?\})", raw_feedback)
         if timeline_match:
             try: 
                 timeline_data = json.loads(timeline_match.group(1))
-                raw_feedback = re.sub(r"TIMELINE_STREAM:\s*\{.*?\}", "", raw_feedback, flags=re.DOTALL).strip()
             except Exception: 
                 pass
             
-        clean_feedback = raw_feedback.replace("```markdown", "").replace("```", "").strip()
+        clean_feedback = re.sub(r"TIMELINE_STREAM:\s*\{.*?\}", "", raw_feedback, flags=re.DOTALL).strip().replace("```markdown", "").replace("```", "").strip()
         
-        # 📈 DISPLAY PREMIUM SCORECARD TOP METRIC
-        st.markdown("---")
-        col_chart, col_score = st.columns([3, 1])
-        
-        with col_score:
-            st.markdown("<br>", unsafe_allow_html=True)
-            st.metric(label="🏆 Final Performance Score", value=score_value)
-            if score_match:
-                numerical_score = int(score_match.group(1))
-                if numerical_score >= 85:
-                    st.success("🎯 **Elite Standing:** Excellent margin defense and high conversational maturity.")
-                elif numerical_score >= 70:
-                    st.warning("⚖️ **Pragmatic Standing:** Acceptable deal closure, but minor margin leakages detected.")
-                else:
-                    st.error("🚨 **Remedial Standing:** Significant margin destruction or fatal landmines activated.")
-        
-        with col_chart:
-            st.markdown("### Negotiation Process Lifecycle Chart")
-            if timeline_data:
-                try:
-                    df_timeline = pd.DataFrame(timeline_data)
-                    df_timeline.index = [f"Round {i+1:02d}" for i in range(len(df_timeline))]
-                    st.line_chart(df_timeline, use_container_width=True)
-                except Exception: 
-                    st.write(timeline_data)
+        st.markdown("### Negotiation Process Lifecycle Chart")
+        if timeline_data:
+            try:
+                df_timeline = pd.DataFrame(timeline_data)
+                df_timeline.index = [f"Round {i+1:02d}" for i in range(len(df_timeline))]
+                st.line_chart(df_timeline, use_container_width=True)
+            except Exception: 
+                st.write(timeline_data)
                 
         st.divider()
         st.markdown("### Executive Soft Skills Audit & Report")
         render_justified_report(clean_feedback)
         
-        compiled_master_report = f"=== Master Audit Archive ===\n\nFinal Score: {score_value}\n\nTranscript:\n{transcript_data}\n\nReport:\n{clean_feedback}"
+        compiled_master_report = f"=== Master Audit Archive ===\n\nTranscript:\n{transcript_data}\n\nReport:\n{clean_feedback}"
         st.download_button(label="💾 Download Full Report Archive (.txt)", data=compiled_master_report, file_name="negotiation_archive.txt", mime="text/plain", use_container_width=True)
     except Exception as e:
         loading_placeholder.empty()
