@@ -398,7 +398,14 @@ DATA_STREAM: {{"v1_price": value, "v2_metric": value, "v3_metric": value, "v4_me
                     if turn.get("content", "").strip(): 
                         messages_payload.append({"role": turn["role"], "content": turn["content"]})
                 
-                ai_raw_text = safe_mistral_call(messages_payload, temperature=0.7)
+                try:
+                    ai_raw_text = safe_mistral_call(messages_payload, temperature=0.7)
+                except Exception as e:
+                    ai_raw_text = f"🚨 [API Failure Diagnostic Log: {str(e)}]"
+                
+                # 🛡️ FILTRO ABSOLUTO VISUAL: Limpieza en caliente antes de renderizar o guardar
+                visible_clean_text = re.sub(r"DATA_STREAM:\s*\{.*?\}", "", ai_raw_text, flags=re.DOTALL).strip()
+                visible_clean_text = visible_clean_text.replace("```json", "").replace("```", "").strip()
                 
                 if enable_monitoring:
                     time.sleep(1.5)
@@ -408,16 +415,8 @@ DATA_STREAM: {{"v1_price": value, "v2_metric": value, "v3_metric": value, "v4_me
                         st.session_state.case_keys
                     )
                 
-                # Limpiamos quirúrgicamente el texto eliminando la línea DATA_STREAM antes de guardarlo o mostrarlo
-		visible_clean_text = re.sub(r"DATA_STREAM:\s*\{.*?\}", "", ai_raw_text, flags=re.DOTALL).strip()
-		visible_clean_text = visible_clean_text.replace("```json", "").replace("```", "").strip()
-
-		# Guardamos la versión limpia en el historial visual del usuario
-		st.session_state.history.append({"role": "assistant", "content": visible_clean_text})
-
-		# Pintamos en pantalla la prosa de negocios pura sin metadatos
-		st.write(visible_clean_text)
-
+                st.session_state.history.append({"role": "assistant", "content": visible_clean_text})
+                st.write(visible_clean_text)
         st.rerun()
         st.stop()
 
