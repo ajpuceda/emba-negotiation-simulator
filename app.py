@@ -240,6 +240,8 @@ if st.session_state.phase == "setup":
             if len(texto_limpio) < 5:
                 with st.spinner("🎲 Generating random premium scenario description..."):
                     prompt_random = "Generate a short, 1-sentence highly sophisticated corporate negotiation scenario description. Output only the sentence."
+                    
+                    time.sleep(1.5) # 👈 Pausa estratégica anti-429
                     response_tema = client.chat.complete(model=MISTRAL_MODEL, messages=[{"role": "user", "content": prompt_random}])
                     texto_limpio = response_tema.choices.message.content.strip()
                     st.info(f"🎲 Random Scenario Isolated: {texto_limpio}")
@@ -247,6 +249,8 @@ if st.session_state.phase == "setup":
             with st.status("🚀 Advanced Pipeline: Processing Macroeconomic Model...", expanded=True) as status:
                 status.update(label="🧠 Stage 1/4: Identifying variables and computing economic curves...", state="running")
                 base_prompt = st.secrets["PROMPT_GENERACION"]
+                
+                time.sleep(1.5) # 👈 Pausa estratégica anti-429 antes del Stage 1
                 response = client.chat.complete(model=MISTRAL_MODEL, messages=[{"role": "user", "content": base_prompt.format(tema=texto_limpio)}])
                 raw_content = response.choices.message.content
 
@@ -256,6 +260,8 @@ if st.session_state.phase == "setup":
                     f"CRITICAL COMPLIANCE REQUIREMENT: You MUST preserve the exact encapsulation tags (START_USER_DATA, END_USER_DATA, "
                     f"START_AI_SECRET_DATA, END_AI_SECRET_DATA) in your final response. Output ONLY the corrected case study enclosed inside those tags."
                 )
+                
+                time.sleep(1.5) # 👈 Pausa estratégica anti-429 antes del Stage 2
                 response_auditada = client.chat.complete(model=MISTRAL_MODEL, messages=[{"role": "user", "content": prompt_auditoria}], temperature=0.1)
                 content_verificado = response_auditada.choices.message.content
                 
@@ -271,8 +277,8 @@ if st.session_state.phase == "setup":
                         keyword_ai = "START_AI_SECRET_DATA" if "START_AI_SECRET_DATA" in content_verificado else "AI_BLOCK"
                         if keyword_ai in content_verificado:
                             parts = content_verificado.split(keyword_ai, 1)
-                            st.session_state.user_instructions = parts[0].replace("START_USER_DATA", "").replace("END_USER_DATA", "").replace("USER_BLOCK", "").strip()
-                            st.session_state.ai_context = parts[1].replace("END_AI_SECRET_DATA", "").replace("AI_BLOCK", "").strip()
+                            st.session_state.user_instructions = parts.replace("START_USER_DATA", "").replace("END_USER_DATA", "").replace("USER_BLOCK", "").strip()
+                            st.session_state.ai_context = parts.replace("END_AI_SECRET_DATA", "").replace("AI_BLOCK", "").strip()
                         else:
                             st.session_state.user_instructions = content_verificado.strip()
                             st.session_state.ai_context = "Error parsing AI context. Stay in character as a tough corporate negotiator."
@@ -291,6 +297,7 @@ if st.session_state.phase == "setup":
             
         discovery_prompt = f"Identify exactly 5 variables negotiated: {st.session_state.ai_context}. Return ONLY a raw JSON list of their 5 plain text names."
         try:
+            time.sleep(1.5) # 👈 Pausa estratégica anti-429 antes de extraer variables
             response_keys = client.chat.complete(model=MISTRAL_MODEL, messages=[{"role": "user", "content": discovery_prompt}])
             raw_json_keys = response_keys.choices.message.content.strip()
             clean_json_keys = re.sub(r"```json|```", "", raw_json_keys).strip()
@@ -304,6 +311,7 @@ if st.session_state.phase == "setup":
             profile_instructions = "friendly, highly cooperative" if "Soft" in ai_profile else ("extremely aggressive, unyielding" if "Hard" in ai_profile else "balanced, corporate")
             prompt_intro = f"Based on your role: {st.session_state.ai_context}. Write a professional 2-sentence opening statement to start the meeting. Tone: {profile_instructions}."
             try:
+                time.sleep(1.5) # 👈 Pausa estratégica anti-429 antes del saludo inicial
                 response_intro = client.chat.complete(model=MISTRAL_MODEL, messages=[{"role": "user", "content": prompt_intro}])
                 raw_greetings = response_intro.choices.message.content.strip()
                 greetings_text = re.sub(r"^(Here's|Here is|Sure|As requested|Adhering).*?:", "", raw_greetings, flags=re.IGNORECASE).strip()
