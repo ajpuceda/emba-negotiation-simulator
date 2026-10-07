@@ -241,7 +241,7 @@ if st.session_state.phase == "setup":
                 with st.spinner("🎲 Generating random premium scenario description..."):
                     prompt_random = "Generate a short, 1-sentence highly sophisticated corporate negotiation scenario description. Output only the sentence."
                     
-                    time.sleep(1.5) # 👈 Pausa estratégica anti-429
+                    time.sleep(1.5) # Pausa estratégica anti-429
                     response_tema = client.chat.complete(model=MISTRAL_MODEL, messages=[{"role": "user", "content": prompt_random}])
                     texto_limpio = response_tema.choices.message.content.strip()
                     st.info(f"🎲 Random Scenario Isolated: {texto_limpio}")
@@ -250,11 +250,11 @@ if st.session_state.phase == "setup":
                 status.update(label="🧠 Stage 1/4: Identifying variables and computing economic curves...", state="running")
                 base_prompt = st.secrets["PROMPT_GENERACION"]
                 
-                time.sleep(1.5) # 👈 Pausa estratégica anti-429 antes del Stage 1
-                # Usamos replace para ignorar las llaves matemáticas del resto del prompt
-		prompt_inyectado = base_prompt.replace("{tema}", texto_limpio)
-		response = client.chat.complete(model=MISTRAL_MODEL, messages=[{"role": "user", "content": prompt_inyectado}])
-		raw_content = response.choices.message.content
+                time.sleep(1.5) # Pausa estratégica anti-429
+                # 🛡️ SOLUCIÓN AQUÍ: Usamos .replace() en lugar de .format() para aislar las llaves matemáticas
+                prompt_inyectado = base_prompt.replace("{tema}", texto_limpio)
+                response = client.chat.complete(model=MISTRAL_MODEL, messages=[{"role": "user", "content": prompt_inyectado}])
+                raw_content = response.choices.message.content
 
                 status.update(label="⚖️ Stage 2/4: Executing Critical Auto-Correction Loop (HBS Checklist)...", state="running")
                 prompt_auditoria = (
@@ -263,7 +263,7 @@ if st.session_state.phase == "setup":
                     f"START_AI_SECRET_DATA, END_AI_SECRET_DATA) in your final response. Output ONLY the corrected case study enclosed inside those tags."
                 )
                 
-                time.sleep(1.5) # 👈 Pausa estratégica anti-429 antes del Stage 2
+                time.sleep(1.5) # Pausa estratégica anti-429
                 response_auditada = client.chat.complete(model=MISTRAL_MODEL, messages=[{"role": "user", "content": prompt_auditoria}], temperature=0.1)
                 content_verificado = response_auditada.choices.message.content
                 
@@ -299,7 +299,7 @@ if st.session_state.phase == "setup":
             
         discovery_prompt = f"Identify exactly 5 variables negotiated: {st.session_state.ai_context}. Return ONLY a raw JSON list of their 5 plain text names."
         try:
-            time.sleep(1.5) # 👈 Pausa estratégica anti-429 antes de extraer variables
+            time.sleep(1.5) # Pausa estratégica anti-429
             response_keys = client.chat.complete(model=MISTRAL_MODEL, messages=[{"role": "user", "content": discovery_prompt}])
             raw_json_keys = response_keys.choices.message.content.strip()
             clean_json_keys = re.sub(r"```json|```", "", raw_json_keys).strip()
@@ -313,7 +313,7 @@ if st.session_state.phase == "setup":
             profile_instructions = "friendly, highly cooperative" if "Soft" in ai_profile else ("extremely aggressive, unyielding" if "Hard" in ai_profile else "balanced, corporate")
             prompt_intro = f"Based on your role: {st.session_state.ai_context}. Write a professional 2-sentence opening statement to start the meeting. Tone: {profile_instructions}."
             try:
-                time.sleep(1.5) # 👈 Pausa estratégica anti-429 antes del saludo inicial
+                time.sleep(1.5) # Pausa estratégica anti-429
                 response_intro = client.chat.complete(model=MISTRAL_MODEL, messages=[{"role": "user", "content": prompt_intro}])
                 raw_greetings = response_intro.choices.message.content.strip()
                 greetings_text = re.sub(r"^(Here's|Here is|Sure|As requested|Adhering).*?:", "", raw_greetings, flags=re.IGNORECASE).strip()
@@ -325,6 +325,7 @@ if st.session_state.phase == "setup":
             st.session_state.phase = "chat"
             st.rerun()
             st.stop()
+
 # ========================================================================
 # --- PHASE 2: LIVE SIMULATION INTERACTION (BOARDROOM CHAT) ---
 # ========================================================================
