@@ -327,6 +327,32 @@ if st.session_state.phase == "setup":
             st.stop()
 
 # ========================================================================
+# 🛡️ FUNCIÓN AUXILIAR DE CHAT SEGURO CON REINTENTOS ANTI-429
+# ========================================================================
+def safe_chat_mistral_call(messages_payload, temperature=0.7, max_retries=5):
+    """
+    Ejecuta las llamadas del chat interactivo y auditorías manteniendo la calidad 100%.
+    Si golpea el Rate Limit (429), pausa la ejecución y reintenta automáticamente.
+    """
+    for attempt in range(max_retries):
+        try:
+            response = client.chat.complete(
+                model=MISTRAL_MODEL,
+                messages=messages_payload,
+                temperature=temperature
+            )
+            return response.choices.message.content
+        except Exception as e:
+            error_msg = str(e)
+            if "429" in error_msg or "rate_limited" in error_msg.lower():
+                wait_time = 3 * (attempt + 1)
+                st.warning(f"⚠️ Boardroom congestion (Rate Limit 429). Counterpart is gathering thoughts for {wait_time}s to preserve negotiation matrix accuracy... (Attempt {attempt + 1}/{max_retries})")
+                time.sleep(wait_time)
+            else:
+                raise e
+    raise Exception("Could not receive response from the negotiator due to rate limit exhaustion. Please resend your message.")
+
+# ========================================================================
 # --- PHASE 2: LIVE SIMULATION INTERACTION (BOARDROOM CHAT) ---
 # ========================================================================
 elif st.session_state.phase == "chat" and st.session_state.turn_counter < 20:
@@ -377,18 +403,20 @@ elif st.session_state.phase == "chat" and st.session_state.turn_counter < 20:
                     if turn.get("content", "").strip(): 
                         messages_payload.append({"role": turn["role"], "content": turn["content"]})
                 
-                try:
-                    time.sleep(1.5) # 👈 Pausa estratégica anti-429
-                    ai_response = client.chat.complete(model=MISTRAL_MODEL, messages=messages_payload, temperature=0.7)
-                    ai_raw_text = ai_response.choices.message.content
-                except Exception as e:
-                    ai_raw_text = f"🚨 [API Failure Diagnostic Log: {str(e)}]"
+                # 🛡️ CHAT PROTEGIDO: Si el bot da un 429 al responder, espera e intenta de nuevo manteniendo la calidad
+                ai_raw_text = safe_chat_mistral_call(messages_payload, temperature=0.7)
                 
                 if enable_monitoring:
-                    time.sleep(1.5) # 👈 Pausa estratégica antes de lanzar el observador paralelo
-                    st.session_state.current_metrics = run_parallel_observer_audit(st.session_state.history + [{"role": "assistant", "content": ai_raw_text}], st.session_state.current_metrics, st.session_state.case_keys)
+                    time.sleep(1.5) # Pausa estratégica antes de lanzar el observador paralelo
+                    st.session_state.current_metrics = run_parallel_observer_audit(
+                        st.session_state.history + [{"role": "assistant", "content": ai_raw_text}], 
+                        st.session_state.current_metrics, 
+                        st.session_state.case_keys
+                    )
                 
                 st.session_state.history.append({"role": "assistant", "content": ai_raw_text})
+                visible_clean_text = re.sub(r"DATA_STREAM:\s*\{.*?\}", "", ai_raw_text, flags=re.DOTALL).strip()
+                st.write(visible_clean_text)
         st.rerun()
         st.stop()
 
@@ -428,9 +456,8 @@ elif st.session_state.phase == "feedback" or st.session_state.turn_counter >= 20
     prompt_inyectado_fb = prompt_inyectado_fb.replace("{active_variables_instruction}", f"TIMELINE_STREAM: {{{json_structure}}}")
     
     try:
-        time.sleep(1.5) # 👈 Pausa estratégica anti-429 antes del informe analítico
-        feedback_response = client.chat.complete(model=MISTRAL_MODEL, messages=[{"role": "user", "content": prompt_inyectado_fb}])
-        raw_feedback = feedback_response.choices.message.content
+        # 🛡️ AUDITORÍA DE INFORME PROTEGIDA: Reutiliza la función anti-429 para compilar el reporte sin interrupciones
+        raw_feedback = safe_chat_mistral_call([{"role": "user", "content": prompt_inyectado_fb}], temperature=0.3)
         loading_placeholder.empty()
 
         timeline_data = {}
@@ -466,3 +493,4 @@ elif st.session_state.phase == "feedback" or st.session_state.turn_counter >= 20
         st.session_state.clear()
         st.rerun()
         st.stop()
+
