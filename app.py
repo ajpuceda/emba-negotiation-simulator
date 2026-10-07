@@ -408,9 +408,16 @@ DATA_STREAM: {{"v1_price": value, "v2_metric": value, "v3_metric": value, "v4_me
                         st.session_state.case_keys
                     )
                 
-                st.session_state.history.append({"role": "assistant", "content": ai_raw_text})
-                visible_clean_text = re.sub(r"DATA_STREAM:\s*\{.*?\}", "", ai_raw_text, flags=re.DOTALL).strip()
-                st.write(visible_clean_text)
+                # Limpiamos quirúrgicamente el texto eliminando la línea DATA_STREAM antes de guardarlo o mostrarlo
+		visible_clean_text = re.sub(r"DATA_STREAM:\s*\{.*?\}", "", ai_raw_text, flags=re.DOTALL).strip()
+		visible_clean_text = visible_clean_text.replace("```json", "").replace("```", "").strip()
+
+		# Guardamos la versión limpia en el historial visual del usuario
+		st.session_state.history.append({"role": "assistant", "content": visible_clean_text})
+
+		# Pintamos en pantalla la prosa de negocios pura sin metadatos
+		st.write(visible_clean_text)
+
         st.rerun()
         st.stop()
 
