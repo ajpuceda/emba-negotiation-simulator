@@ -50,7 +50,7 @@ def safe_mistral_call(messages_payload, temperature=0.7, max_retries=5):
                 messages=messages_payload,
                 temperature=temperature
             )
-            return response.choices.message.content
+            return response.choices[0].message.content
         except Exception as e:
             error_msg = str(e)
             if "429" in error_msg or "rate_limited" in error_msg.lower():
