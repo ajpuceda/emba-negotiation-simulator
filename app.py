@@ -32,8 +32,8 @@ def get_mistral_client():
 
 client = get_mistral_client()
 
-# Constante global para el modelo avanzado de Mistral AI
-MISTRAL_MODEL = "mistral-large-latest"
+# Constante global para el modelo menos avanzado de Mistral AI
+MISTRAL_MODEL = "mistral-small-latest"
 
 # ========================================================================
 # 🧮 FINANCIAL METADATA EXTRACTION INFRASTRUCTURE
