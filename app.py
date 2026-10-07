@@ -1,5 +1,12 @@
 import streamlit as st
-from mistralai import Mistral  # Migrado desde zhipuai
+try:
+    from mistralai import Mistral
+except ImportError:
+    try:
+        from mistralai.client import Mistral
+    except ImportError:
+        # Compatibilidad con versiones heredadas muy antiguas
+        from mistralai.client import MistralClient as Mistral
 import json
 import re
 import os
