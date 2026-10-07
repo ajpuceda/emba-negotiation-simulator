@@ -452,30 +452,55 @@ elif st.session_state.phase == "feedback" or st.session_state.turn_counter >= 20
         raw_feedback = safe_mistral_call([{"role": "user", "content": prompt_inyectado_fb}], temperature=0.3)
         loading_placeholder.empty()
 
+        # 🧮 EXTRACCIÓN QUIRÚRGICA DE LA PUNTUACIÓN DE EXIGENCIA MÁXIMA
+        score_value = "N/A"
+        score_match = re.search(r"\[SCORE:\s*(\d{1,3})/100\]", raw_feedback)
+        if score_match:
+            score_value = f"{score_match.group(1)} / 100"
+            raw_feedback = re.sub(r"\[SCORE:\s*\d{1,3}/100\]", "", raw_feedback).strip()
+
         timeline_data = {}
         timeline_match = re.search(r"TIMELINE_STREAM:\s*(\{.*?\})", raw_feedback)
         if timeline_match:
             try: 
                 timeline_data = json.loads(timeline_match.group(1))
+                raw_feedback = re.sub(r"TIMELINE_STREAM:\s*\{.*?\}", "", raw_feedback, flags=re.DOTALL).strip()
             except Exception: 
                 pass
             
-        clean_feedback = re.sub(r"TIMELINE_STREAM:\s*\{.*?\}", "", raw_feedback, flags=re.DOTALL).strip().replace("```markdown", "").replace("```", "").strip()
+        clean_feedback = raw_feedback.replace("```markdown", "").replace("```", "").strip()
         
-        st.markdown("### Negotiation Process Lifecycle Chart")
-        if timeline_data:
-            try:
-                df_timeline = pd.DataFrame(timeline_data)
-                df_timeline.index = [f"Round {i+1:02d}" for i in range(len(df_timeline))]
-                st.line_chart(df_timeline, use_container_width=True)
-            except Exception: 
-                st.write(timeline_data)
+        # 📈 MANDATARIO: Dashboard superior de analíticas corporativas
+        st.markdown("---")
+        col_chart, col_score = st.columns(2)
+        
+        with col_score:
+            st.markdown("<br>", unsafe_allow_html=True)
+            st.metric(label="🏆 Wharton Rigorous Performance Score", value=score_value)
+            if score_match:
+                numerical_score = int(score_match.group(1))
+                if numerical_score >= 85:
+                    st.success("🎯 **Elite Executive Standing:** Excellent margin defense and proactive tactical positioning.")
+                elif numerical_score >= 65:
+                    st.warning("⚖️ **Suboptimal Executive Standing:** Acceptable closure, but critical gaps in counter-offering or passivity detected.")
+                else:
+                    st.error("🚨 **Deficient Strategic Standing:** Failed to defend margins, high initial passivity, or stepped into risk landmines.")
+        
+        with col_chart:
+            st.markdown("### Negotiation Process Lifecycle Chart")
+            if timeline_data:
+                try:
+                    df_timeline = pd.DataFrame(timeline_data)
+                    df_timeline.index = [f"Round {i+1:02d}" for i in range(len(df_timeline))]
+                    st.line_chart(df_timeline, use_container_width=True)
+                except Exception: 
+                    st.write(timeline_data)
                 
         st.divider()
         st.markdown("### Executive Soft Skills Audit & Report")
         render_justified_report(clean_feedback)
         
-        compiled_master_report = f"=== Master Audit Archive ===\n\nTranscript:\n{transcript_data}\n\nReport:\n{clean_feedback}"
+        compiled_master_report = f"=== Master Audit Archive ===\n\nFinal Score: {score_value}\n\nTranscript:\n{transcript_data}\n\nReport:\n{clean_feedback}"
         st.download_button(label="💾 Download Full Report Archive (.txt)", data=compiled_master_report, file_name="negotiation_archive.txt", mime="text/plain", use_container_width=True)
     except Exception as e:
         loading_placeholder.empty()
