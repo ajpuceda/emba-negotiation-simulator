@@ -357,7 +357,8 @@ elif st.session_state.phase == "chat" and st.session_state.turn_counter < 20:
         if visible_text:
             with st.chat_message(msg["role"]): st.write(visible_text)
             
-    if user_input := st.chat_input(placeholder="Type your counteroffer or package proposal here..."):
+    if user_input := st.chat_input(placeholder="Type your counteroffer or package proposal here... (Or type /end to close meeting)"):
+
         if user_input.strip().lower() == "/end":
             st.session_state.phase = "feedback"
             st.rerun()
