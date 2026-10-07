@@ -36,6 +36,31 @@ client = get_mistral_client()
 MISTRAL_MODEL = "mistral-small-latest"
 
 # ========================================================================
+# 🛡️ FUNCIÓN DE LLAMADA SEGURA CON AUTO-RECUPERACIÓN (ANTI-429)
+# ========================================================================
+def safe_mistral_call(messages_payload, temperature=0.7, max_retries=5):
+    """
+    Ejecuta llamadas al API de Mistral manteniendo la calidad intacta al 100%.
+    Si golpea el Rate Limit (429), pausa la ejecución y reintenta automáticamente.
+    """
+    for attempt in range(max_retries):
+        try:
+            response = client.chat.complete(
+                model=MISTRAL_MODEL,
+                messages=messages_payload,
+                temperature=temperature
+            )
+            return response.choices.message.content
+        except Exception as e:
+            error_msg = str(e)
+            if "429" in error_msg or "rate_limited" in error_msg.lower():
+                wait_time = 3 * (attempt + 1)
+                st.warning(f"⚠️ Mistral Rate Limit hit. Breathing for {wait_time} seconds to protect prompt quality... (Attempt {attempt + 1}/{max_retries})")
+                time.sleep(wait_time)
+            else:
+                raise e
+    raise Exception("Could not complete the API request due to severe rate limits. Please try again.")
+# ========================================================================
 # 🧮 FINANCIAL METADATA EXTRACTION INFRASTRUCTURE
 # ========================================================================
 def extract_financial_data(text):
@@ -97,7 +122,7 @@ def render_justified_report(report_text):
             current_paragraph_lines = []
             clean_section_title = re.sub(r"^[\s\-_*•▪▫◦¶.·\d]+", "", cleaned_line).strip()
             clean_section_title = clean_section_title.replace("—", "").replace("-", "").strip()
-            compiled_html += f'<div style="color: #1D3557; font-size: 17px; font-weight: bold; margin-top: 26px; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.5px; border-left: 4px solid #1D3557; padding-left: 8px;">{clean_section_title}</div>'
+            compiled_html += f'<h4 style="color: #1D3557; font-size: 17px; font-weight: bold; margin-top: 26px; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.5px; border-left: 4px solid #1D3557; padding-left: 8px;">{clean_section_title}</h4>'
 
         elif cleaned_line.startswith("*") or cleaned_line.startswith("•"):
             compiled_html += flush_paragraph()
@@ -116,7 +141,6 @@ def render_justified_report(report_text):
             
     compiled_html += flush_paragraph()
     st.markdown(compiled_html, unsafe_allow_html=True)
-
 def render_status_card(label, current_value):
     """Paints clean executive control cards with HTML injection based on the original semantics."""
     val_str = str(current_value).upper().strip()
@@ -148,6 +172,7 @@ def render_status_card(label, current_value):
         </div>
     </div>
     """, unsafe_allow_html=True)
+
 def run_parallel_observer_audit(chat_history_list, current_metrics, case_keys):
     if not chat_history_list or not case_keys:
         return current_metrics
@@ -167,16 +192,11 @@ def run_parallel_observer_audit(chat_history_list, current_metrics, case_keys):
     {slots_blueprint}
     """
     try:
-        # Migración: client.chat.complete y extracción directa sin corchetes
-        response_audit = client.chat.complete(
-            model=MISTRAL_MODEL,
-            messages=[
-                {"role": "system", "content": observer_system_prompt},
-                {"role": "user", "content": f"Here is the recent meeting transcript window to audit:\n{transcript_text}"}
-            ],
-            temperature=0.0
-        )
-        raw_audit_text = response_audit.choices.message.content.strip()
+        raw_audit_text = safe_mistral_call([
+            {"role": "system", "content": observer_system_prompt},
+            {"role": "user", "content": f"Here is the recent meeting transcript window to audit:\n{transcript_text}"}
+        ], temperature=0.0)
+        
         clean_audit_json = re.sub(r"```json|```", "", raw_audit_text).strip()
         parsed_audit = json.loads(clean_audit_json)
         normalized_audit = {str(k).strip().lower(): v for k, v in parsed_audit.items()}
@@ -240,21 +260,16 @@ if st.session_state.phase == "setup":
             if len(texto_limpio) < 5:
                 with st.spinner("🎲 Generating random premium scenario description..."):
                     prompt_random = "Generate a short, 1-sentence highly sophisticated corporate negotiation scenario description. Output only the sentence."
-                    
-                    time.sleep(1.5) # Pausa estratégica anti-429
-                    response_tema = client.chat.complete(model=MISTRAL_MODEL, messages=[{"role": "user", "content": prompt_random}])
-                    texto_limpio = response_tema.choices.message.content.strip()
+                    texto_limpio = safe_mistral_call([{"role": "user", "content": prompt_random}]).strip()
                     st.info(f"🎲 Random Scenario Isolated: {texto_limpio}")
 
             with st.status("🚀 Advanced Pipeline: Processing Macroeconomic Model...", expanded=True) as status:
                 status.update(label="🧠 Stage 1/4: Identifying variables and computing economic curves...", state="running")
                 base_prompt = st.secrets["PROMPT_GENERACION"]
                 
-                time.sleep(1.5) # Pausa estratégica anti-429
-                # 🛡️ SOLUCIÓN AQUÍ: Usamos .replace() en lugar de .format() para aislar las llaves matemáticas
+                # Proteger las llaves del macro-modelo matemático usando reemplazo directo en lugar de .format()
                 prompt_inyectado = base_prompt.replace("{tema}", texto_limpio)
-                response = client.chat.complete(model=MISTRAL_MODEL, messages=[{"role": "user", "content": prompt_inyectado}])
-                raw_content = response.choices.message.content
+                raw_content = safe_mistral_call([{"role": "user", "content": prompt_inyectado}], temperature=0.7)
 
                 status.update(label="⚖️ Stage 2/4: Executing Critical Auto-Correction Loop (HBS Checklist)...", state="running")
                 prompt_auditoria = (
@@ -262,10 +277,7 @@ if st.session_state.phase == "setup":
                     f"CRITICAL COMPLIANCE REQUIREMENT: You MUST preserve the exact encapsulation tags (START_USER_DATA, END_USER_DATA, "
                     f"START_AI_SECRET_DATA, END_AI_SECRET_DATA) in your final response. Output ONLY the corrected case study enclosed inside those tags."
                 )
-                
-                time.sleep(1.5) # Pausa estratégica anti-429
-                response_auditada = client.chat.complete(model=MISTRAL_MODEL, messages=[{"role": "user", "content": prompt_auditoria}], temperature=0.1)
-                content_verificado = response_auditada.choices.message.content
+                content_verificado = safe_mistral_call([{"role": "user", "content": prompt_auditoria}], temperature=0.1)
                 
                 status.update(label="🗜️ Stage 3/4: Decompressing Ledger Data Wall...", state="running")
                 try:
@@ -299,9 +311,7 @@ if st.session_state.phase == "setup":
             
         discovery_prompt = f"Identify exactly 5 variables negotiated: {st.session_state.ai_context}. Return ONLY a raw JSON list of their 5 plain text names."
         try:
-            time.sleep(1.5) # Pausa estratégica anti-429
-            response_keys = client.chat.complete(model=MISTRAL_MODEL, messages=[{"role": "user", "content": discovery_prompt}])
-            raw_json_keys = response_keys.choices.message.content.strip()
+            raw_json_keys = safe_mistral_call([{"role": "user", "content": discovery_prompt}])
             clean_json_keys = re.sub(r"```json|```", "", raw_json_keys).strip()
             st.session_state.case_keys = json.loads(clean_json_keys)[:5]
         except Exception:
@@ -313,9 +323,7 @@ if st.session_state.phase == "setup":
             profile_instructions = "friendly, highly cooperative" if "Soft" in ai_profile else ("extremely aggressive, unyielding" if "Hard" in ai_profile else "balanced, corporate")
             prompt_intro = f"Based on your role: {st.session_state.ai_context}. Write a professional 2-sentence opening statement to start the meeting. Tone: {profile_instructions}."
             try:
-                time.sleep(1.5) # Pausa estratégica anti-429
-                response_intro = client.chat.complete(model=MISTRAL_MODEL, messages=[{"role": "user", "content": prompt_intro}])
-                raw_greetings = response_intro.choices.message.content.strip()
+                raw_greetings = safe_mistral_call([{"role": "user", "content": prompt_intro}])
                 greetings_text = re.sub(r"^(Here's|Here is|Sure|As requested|Adhering).*?:", "", raw_greetings, flags=re.IGNORECASE).strip()
                 if not greetings_text: greetings_text = raw_greetings.replace('"', '')
             except Exception:
@@ -325,33 +333,6 @@ if st.session_state.phase == "setup":
             st.session_state.phase = "chat"
             st.rerun()
             st.stop()
-
-# ========================================================================
-# 🛡️ FUNCIÓN AUXILIAR DE CHAT SEGURO CON REINTENTOS ANTI-429
-# ========================================================================
-def safe_chat_mistral_call(messages_payload, temperature=0.7, max_retries=5):
-    """
-    Ejecuta las llamadas del chat interactivo y auditorías manteniendo la calidad 100%.
-    Si golpea el Rate Limit (429), pausa la ejecución y reintenta automáticamente.
-    """
-    for attempt in range(max_retries):
-        try:
-            response = client.chat.complete(
-                model=MISTRAL_MODEL,
-                messages=messages_payload,
-                temperature=temperature
-            )
-            return response.choices.message.content
-        except Exception as e:
-            error_msg = str(e)
-            if "429" in error_msg or "rate_limited" in error_msg.lower():
-                wait_time = 3 * (attempt + 1)
-                st.warning(f"⚠️ Boardroom congestion (Rate Limit 429). Counterpart is gathering thoughts for {wait_time}s to preserve negotiation matrix accuracy... (Attempt {attempt + 1}/{max_retries})")
-                time.sleep(wait_time)
-            else:
-                raise e
-    raise Exception("Could not receive response from the negotiator due to rate limit exhaustion. Please resend your message.")
-
 # ========================================================================
 # --- PHASE 2: LIVE SIMULATION INTERACTION (BOARDROOM CHAT) ---
 # ========================================================================
@@ -365,8 +346,7 @@ elif st.session_state.phase == "chat" and st.session_state.turn_counter < 20:
         st.metric(label="Rounds Spent", value=f"{st.session_state.turn_counter} / 20")
         enable_monitoring = st.toggle("Enable Real-Time Tracker AI", value=True)
         st.markdown("### Live Contract Tracker")
-        for label, val in st.session_state.current_metrics.items(): 
-            render_status_card(label, val)
+        for label, val in st.session_state.current_metrics.items(): render_status_card(label, val)
 
     with st.expander("📋 Review Confidential Character Instructions", expanded=False): 
         render_justified_report(st.session_state.user_instructions)
@@ -375,8 +355,7 @@ elif st.session_state.phase == "chat" and st.session_state.turn_counter < 20:
     for msg in st.session_state.history:
         visible_text = re.sub(r"DATA_STREAM:\s*\{.*?\}", "", msg["content"], flags=re.DOTALL).strip()
         if visible_text:
-            with st.chat_message(msg["role"]): 
-                st.write(visible_text)
+            with st.chat_message(msg["role"]): st.write(visible_text)
             
     if user_input := st.chat_input(placeholder="Type your counteroffer or package proposal here..."):
         if user_input.strip().lower() == "/end":
@@ -400,23 +379,16 @@ elif st.session_state.phase == "chat" and st.session_state.turn_counter < 20:
                 
                 messages_payload = [{"role": "system", "content": system_instruction}]
                 for turn in st.session_state.history:
-                    if turn.get("content", "").strip(): 
-                        messages_payload.append({"role": turn["role"], "content": turn["content"]})
+                    if turn.get("content", "").strip(): messages_payload.append({"role": turn["role"], "content": turn["content"]})
                 
-                # 🛡️ CHAT PROTEGIDO: Si el bot da un 429 al responder, espera e intenta de nuevo manteniendo la calidad
-                ai_raw_text = safe_chat_mistral_call(messages_payload, temperature=0.7)
+                # Chat protegido en tiempo real de forma segura contra el error 429
+                ai_raw_text = safe_mistral_call(messages_payload, temperature=0.7)
                 
                 if enable_monitoring:
-                    time.sleep(1.5) # Pausa estratégica antes de lanzar el observador paralelo
-                    st.session_state.current_metrics = run_parallel_observer_audit(
-                        st.session_state.history + [{"role": "assistant", "content": ai_raw_text}], 
-                        st.session_state.current_metrics, 
-                        st.session_state.case_keys
-                    )
+                    time.sleep(1.5) # Pausa mínima para no congestionar las peticiones por segundo
+                    st.session_state.current_metrics = run_parallel_observer_audit(st.session_state.history + [{"role": "assistant", "content": ai_raw_text}], st.session_state.current_metrics, st.session_state.case_keys)
                 
                 st.session_state.history.append({"role": "assistant", "content": ai_raw_text})
-                visible_clean_text = re.sub(r"DATA_STREAM:\s*\{.*?\}", "", ai_raw_text, flags=re.DOTALL).strip()
-                st.write(visible_clean_text)
         st.rerun()
         st.stop()
 
@@ -432,8 +404,7 @@ elif st.session_state.phase == "feedback" or st.session_state.turn_counter >= 20
     st.title("Executive Strategic Evaluation & Soft Skills Audit")
     if st.session_state.current_metrics:
         with st.expander("Final Registered Contract Package Status", expanded=True):
-            for label, val in st.session_state.current_metrics.items(): 
-                render_status_card(label, val)
+            for label, val in st.session_state.current_metrics.items(): render_status_card(label, val)
             
     loading_placeholder = st.empty()
     loading_placeholder.progress(0.65, text="🤖 Processing transcript timeline streams & behavioral maturity matrix...")
@@ -443,30 +414,27 @@ elif st.session_state.phase == "feedback" or st.session_state.turn_counter >= 20
     for m in st.session_state.history:
         content_cleaned = re.sub(r"DATA_STREAM:\s*\{.*?\}", "", m["content"], flags=re.DOTALL).strip()
         transcript_data += f"Round {round_idx:02d} - {m['role'].upper()}: {content_cleaned}\n"
-        if m["role"] == "assistant": 
-            round_idx += 1
+        if m["role"] == "assistant": round_idx += 1
         
     active_keys = list(st.session_state.current_metrics.keys())
     json_structure = ", ".join([f'"{k}": [list of integers from 0 to 7]' for k in active_keys])
     
-    # 🛡️ PROTECCIÓN ANTI-SDK_ERROR: Reemplazo explícito seguro para evitar colisiones con llaves matemáticas del prompt
+    # 🛡️ PROTECCIÓN ANTI-SDK_ERROR: Reemplazo explícito seguro para aislar las llaves complejas del JSON
     prompt_base_fb = st.secrets["PROMPT_FEEDBACK"]
     prompt_inyectado_fb = prompt_base_fb.replace("{contexto_ia}", st.session_state.ai_context)
     prompt_inyectado_fb = prompt_inyectado_fb.replace("{transcripcion}", transcript_data)
     prompt_inyectado_fb = prompt_inyectado_fb.replace("{active_variables_instruction}", f"TIMELINE_STREAM: {{{json_structure}}}")
     
     try:
-        # 🛡️ AUDITORÍA DE INFORME PROTEGIDA: Reutiliza la función anti-429 para compilar el reporte sin interrupciones
-        raw_feedback = safe_chat_mistral_call([{"role": "user", "content": prompt_inyectado_fb}], temperature=0.3)
+        # Petición masiva final del informe analítico protegida contra interrupciones de red
+        raw_feedback = safe_mistral_call([{"role": "user", "content": prompt_inyectado_fb}], temperature=0.3)
         loading_placeholder.empty()
 
         timeline_data = {}
         timeline_match = re.search(r"TIMELINE_STREAM:\s*(\{.*?\})", raw_feedback)
         if timeline_match:
-            try: 
-                timeline_data = json.loads(timeline_match.group(1))
-            except Exception: 
-                pass
+            try: timeline_data = json.loads(timeline_match.group(1))
+            except Exception: pass
             
         clean_feedback = re.sub(r"TIMELINE_STREAM:\s*\{.*?\}", "", raw_feedback, flags=re.DOTALL).strip().replace("```markdown", "").replace("```", "").strip()
         
@@ -476,8 +444,7 @@ elif st.session_state.phase == "feedback" or st.session_state.turn_counter >= 20
                 df_timeline = pd.DataFrame(timeline_data)
                 df_timeline.index = [f"Round {i+1:02d}" for i in range(len(df_timeline))]
                 st.line_chart(df_timeline, use_container_width=True)
-            except Exception: 
-                st.write(timeline_data)
+            except Exception: st.write(timeline_data)
                 
         st.divider()
         st.markdown("### Executive Soft Skills Audit & Report")
@@ -493,4 +460,3 @@ elif st.session_state.phase == "feedback" or st.session_state.turn_counter >= 20
         st.session_state.clear()
         st.rerun()
         st.stop()
-
